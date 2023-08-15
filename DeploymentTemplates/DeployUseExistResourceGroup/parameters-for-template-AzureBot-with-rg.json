@@ -12,7 +12,7 @@
       "value": "global"
     },
     "botEndpoint": {
-      "value": ""
+      "value": "https://ltksrebot1.azurewebsites.net/api/messages"
     },
     "appType": {
       "value": "MultiTenant"
