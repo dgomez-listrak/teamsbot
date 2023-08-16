@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "azureBotId": {
-      "value": ""
+      "value": "c13e81c3-ff49-4f27-be66-d212e0c0af3c"
     },
     "azureBotSku": {
       "value": "F0"
