@@ -23,7 +23,7 @@ namespace Microsoft.BotBuilderSamples
     // class is created. Objects that are expensive to construct, or have a lifetime
     // beyond the single turn, should be carefully managed.
 
-    public class AdaptiveCardsBot : ActivityHandler 
+    public class AdaptiveCardsBot : ActivityHandler
     {
         private const string WelcomeText = @"This bot will introduce you to AdaptiveCards.
                                             Type anything to see an AdaptiveCard.";
@@ -46,11 +46,16 @@ namespace Microsoft.BotBuilderSamples
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
             Random r = new Random();
+            string message = turnContext.Activity.Text;
             var cardAttachment = CreateAdaptiveCardAttachment(_cards[r.Next(_cards.Length)]);
 
             //turnContext.Activity.Attachments = new List<Attachment>() { cardAttachment };
             await turnContext.SendActivityAsync(MessageFactory.Attachment(cardAttachment), cancellationToken);
             await turnContext.SendActivityAsync(MessageFactory.Text("Please enter any text to see another card."), cancellationToken);
+            if (!string.IsNullOrEmpty(message))
+            {
+                await turnContext.SendActivityAsync(MessageFactory.Text($"Dynamic response: {message}"), cancellationToken);
+            }
         }
 
         private static async Task SendWelcomeMessageAsync(ITurnContext turnContext, CancellationToken cancellationToken)
@@ -65,7 +70,7 @@ namespace Microsoft.BotBuilderSamples
                 }
             }
         }
-   
+
         private static Attachment CreateAdaptiveCardAttachment(string filePath)
         {
             var adaptiveCardJson = File.ReadAllText(filePath);

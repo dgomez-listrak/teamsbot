@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://gomezdev.hopto.org:3978/",
+      "applicationUrl": "http://localhost:3978/",
       "sslPort": 0
     }
   },
@@ -21,7 +21,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://gomezdev.hopto.org:3978/"
+      "applicationUrl": "http://localhost:3978/"
     }
   }
 }
