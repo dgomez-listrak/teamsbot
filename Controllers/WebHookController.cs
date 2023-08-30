@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder;
+using System.IO;
 
 namespace AdaptiveCardsBot.Controllers
 {
@@ -13,28 +14,34 @@ namespace AdaptiveCardsBot.Controllers
 
         private readonly IBotFrameworkHttpAdapter _adapter;
         private readonly IBot _bot;
-
-        public WebHookController(IBotFrameworkHttpAdapter adapter, IBot bot)
+        private readonly IWebHookProducer _webHookProducer;
+        public WebHookController(IBotFrameworkHttpAdapter adapter, IBot bot, IWebHookProducer webHookProducer)
         {
             _adapter = adapter;
             _bot = bot;
+            _webHookProducer = webHookProducer;
         }
 
 
         // POST api/webhooks/receive
         [HttpPost("receive")]
-        public async Task<IActionResult> ReceiveWebhook([FromBody] string data)
+        public async Task<IActionResult> ReceiveWebhook()
         {
-            if (data == null)
+            using (var reader = new StreamReader(Request.Body))
             {
-                return BadRequest();
-            }
-            await _adapter.ProcessAsync(Request, Response, _bot);
-            // Process the received data
-            // For instance, log the data, store it in a database, etc.
+                string data = await reader.ReadToEndAsync();
 
-            // Once done, return a suitable response. Typically, for webhooks, you'd return a 200 OK.
-            return Ok();
+                if (string.IsNullOrEmpty(data))
+                {
+                    return BadRequest();
+                }
+
+                //await _adapter.ProcessAsync(Request, Response, _bot);
+                // Now, you have the raw JSON in 'data' variable. Process it as needed.
+                // Send to EvenTHub
+                await _webHookProducer.Produce(data);
+                return Ok();
+            }
         }
 
     }
