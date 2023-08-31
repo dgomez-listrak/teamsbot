@@ -22,7 +22,7 @@ namespace AdaptiveCardsBot
             {
                 var message = new Message<string, string>
                 {
-                    Key = jsonmsg.Alert.AlertId.ToString(),
+                    Key = jsonmsg.Alert.AlertId,
                     Value = msg
                 };
 
