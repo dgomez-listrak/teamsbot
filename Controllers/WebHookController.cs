@@ -40,7 +40,7 @@ namespace AdaptiveCardsBot.Controllers
                 // Now, you have the raw JSON in 'data' variable. Process it as needed.
                 // Send to EvenTHub
                 await _webHookProducer.Produce(data);
-                return Ok();
+                return Ok("thanks");
             }
         }
 
