@@ -7,7 +7,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Schema;
+using Microsoft.Bot.Schema.Teams;
 using Newtonsoft.Json;
 
 namespace Microsoft.BotBuilderSamples
@@ -48,13 +50,16 @@ namespace Microsoft.BotBuilderSamples
             Random r = new Random();
             string message = turnContext.Activity.Text;
             var cardAttachment = CreateAdaptiveCardAttachment(_cards[r.Next(_cards.Length)]);
+            var serviceUrl = turnContext.Activity.ServiceUrl;
+
+            var teamDetails = await TeamsInfo.GetTeamChannelsAsync(turnContext, turnContext.Activity.TeamsGetTeamInfo().Id, cancellationToken);
 
             //turnContext.Activity.Attachments = new List<Attachment>() { cardAttachment };
             await turnContext.SendActivityAsync(MessageFactory.Attachment(cardAttachment), cancellationToken);
             await turnContext.SendActivityAsync(MessageFactory.Text("Please enter any text to see another card."), cancellationToken);
             if (!string.IsNullOrEmpty(message))
             {
-                await turnContext.SendActivityAsync(MessageFactory.Text($"Dynamic response: {message}"), cancellationToken);
+                await turnContext.SendActivityAsync(MessageFactory.Text($"Dynamic response: {message} - URL: {serviceUrl}"), cancellationToken);
             }
         }
 
